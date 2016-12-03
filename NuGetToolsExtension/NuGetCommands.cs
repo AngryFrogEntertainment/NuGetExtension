@@ -43,10 +43,11 @@ namespace AngryFrog.NuGetToolsExtension
 			var exitCode = await RunNuget("pack", arguments);
 
 			var packageId = determinePackageId(assemblyName, projectPath);
-			var nugetFiles = Directory.GetFiles(outputPath, "*.nupkg").Where(x => x.Contains(packageId)).ToList();
+            var nugetFiles = Directory.GetFiles(outputPath, "*.nupkg").Where(x => x.Contains($"{packageId}.{version}")).ToList();
 
 			if (nugetFiles.Count == 2 && config.AreSymbolsIncluded)
 			{
+                // If symbols are included, delete the other Package
 				var nugetFile = nugetFiles.FirstOrDefault(x => !x.Contains("symbols"));
 				if (!string.IsNullOrEmpty(nugetFile))
 				{

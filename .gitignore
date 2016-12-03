@@ -1,3 +1,5 @@
 packages
 bin
 obj
+/.vs/NuGetToolsExtension/v14
+/NuGetToolsExtension/NuGetToolsExtension.csproj.user

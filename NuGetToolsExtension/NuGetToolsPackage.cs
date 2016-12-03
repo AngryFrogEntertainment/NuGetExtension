@@ -302,16 +302,8 @@ namespace AngryFrog.NuGetToolsExtension
 				}
 				catch (Exception ex)
 				{
-					VsShellUtilities.ShowMessageBox(
-							this,
-							"Creation of nuspec file failed!" + ex.Message + "." + Environment.NewLine + "See output window for further information.",
-							"Create NuSpec",
-							OLEMSGICON.OLEMSGICON_WARNING,
-							OLEMSGBUTTON.OLEMSGBUTTON_OK,
-							OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-					output.WriteError(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
-				}
+                    displayException(ex, "Creation of nuspec file failed! See output window for further information.", "Create NuSpec");
+                }
 			});
         }
 
@@ -415,30 +407,38 @@ namespace AngryFrog.NuGetToolsExtension
 				}
 				catch (Exception ex)
 				{
-					VsShellUtilities.ShowMessageBox(
-							this,
-							"Push of package failed!" + ex.Message + "." + Environment.NewLine + "See output window for further information.",
-							"Push Package",
-							OLEMSGICON.OLEMSGICON_WARNING,
-							OLEMSGBUTTON.OLEMSGBUTTON_OK,
-							OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-					output.WriteError(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
-				}
+                    displayException(ex, "Push of package failed! See output window for further information.", "Push Package");
+                }
 			});
         }
 
-	    private void displayException(Exception e)
+	    private void displayException(Exception e, string message = "", string title = "Error")
 	    {
-			var decision = VsShellUtilities.ShowMessageBox(
-								this,
-								e.Message,
-								"Error",
-								OLEMSGICON.OLEMSGICON_CRITICAL,
-								OLEMSGBUTTON.OLEMSGBUTTON_OK,
-								OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-		}
+            if (!string.IsNullOrEmpty(message))
+            {
+                VsShellUtilities.ShowMessageBox(
+                    this,
+                    message,
+                    title,
+                    OLEMSGICON.OLEMSGICON_CRITICAL,
+                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            }
 
+            var ae = e as AggregateException;
+
+            if (ae != null)
+            {
+                foreach (var ex in ae.InnerExceptions)
+                {
+                    output.WriteError(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+            }
+            else
+            {
+                output.WriteError(e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine);
+            }
+        }
 	    #endregion
     }
 }
