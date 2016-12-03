@@ -87,14 +87,12 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
-    <Content Include="Resources\ConfigCommand.png" />
-    <Content Include="Resources\ContextMenuCommands.png" />
+    <Content Include="Resources\Icons.png" />
     <Content Include="Resources\nuget.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\NuGetToolsPackage.ico" />
-    <Content Include="Resources\NuGetToolWindowCommand.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
