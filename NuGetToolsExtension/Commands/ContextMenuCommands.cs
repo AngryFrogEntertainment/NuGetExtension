@@ -63,7 +63,7 @@ namespace AngryFrog.NuGetToolsExtension.Commands
                 packageMenuItem.BeforeQueryStatus += beforeQueryStatus;
                 var pushCommandID = new CommandID(CommandSet, pushCmdId);
                 var pushMenuItem = new OleMenuCommand(this.pushPackageCallback, pushCommandID);
-                packageMenuItem.BeforeQueryStatus += beforePushQueryStatus;
+                pushMenuItem.BeforeQueryStatus += beforePushQueryStatus;
 
                 commandService.AddCommand(nuspecMenuItem);
                 commandService.AddCommand(packageMenuItem);
@@ -212,6 +212,12 @@ namespace AngryFrog.NuGetToolsExtension.Commands
         private void beforePushQueryStatus(object sender, EventArgs e)
         {
             var menuCmd = sender as OleMenuCommand;
+
+            if (menuCmd != null)
+            {
+                var project = ServiceProvider.GetSelectedFileFromSolutionExplorer<object>();
+                menuCmd.Visible = true;
+            }
 
             //if (menuCmd != null)
             //{

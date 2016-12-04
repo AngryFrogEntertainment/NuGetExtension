@@ -52,6 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\ConfigCommand.cs" />
+    <Compile Include="Output\RtbOutput.cs" />
     <Compile Include="Windows\VersionDialog.xaml.cs">
       <DependentUpon>VersionDialog.xaml</DependentUpon>
     </Compile>

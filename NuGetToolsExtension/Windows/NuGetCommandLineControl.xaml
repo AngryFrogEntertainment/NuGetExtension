@@ -6,23 +6,32 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="500"
+             MinWidth="500"
+             d:DesignHeight="300" d:DesignWidth="600"
              Name="MyToolWindow">
     <Grid Margin="0,0,0,0">
         <StackPanel Orientation="Horizontal" Height="30" VerticalAlignment="Top" Background="#FF2D2D30" Margin="0">
             <TextBlock Text="Working Directory: " Height="18" VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"/>
-            <TextBox Margin="5" Width="200"></TextBox>
+            <TextBox x:Name="txtDir" Margin="5" Width="300" IsReadOnly="True" Background="#FF6C6C6C" Foreground="White"/>
+            <Button Content="Browse..." x:Name="btnBrowse" Margin="5" Background="#26FFFFFF" Foreground="White" BorderBrush="#FF2E2E2E" FontSize="10" Click="btnBrowse_Click" Padding="4,1"/>
+            <Button Content="Clear All" x:Name="btnClear" Margin="5" Background="#26FFFFFF" Foreground="White" BorderBrush="#FF2E2E2E" FontSize="10" Padding="4,1" Click="btnClear_Click"/>
         </StackPanel>
         <ScrollViewer Margin="0,30,0,0">
+            <ScrollViewer.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0A0A0A" Offset="0"/>
+                    <GradientStop Color="#FF272727" Offset="1"/>
+                </LinearGradientBrush>
+            </ScrollViewer.Background>
             <StackPanel Orientation="Vertical" CanVerticallyScroll="True" Margin="10,5,10,0">
                 <RichTextBox x:Name="txtOut" 
                  Background="Transparent"
                  BorderThickness="0"
                  IsReadOnly="True"
-                 SelectionBrush="#7F0F457C" FontFamily="Consolas" Foreground="White"/>
+                 SelectionBrush="#7F0F457C" FontFamily="Consolas" Foreground="White" FontSize="11"/>
                 <DockPanel Height="Auto" Name="stackPanel1" Width="Auto" LastChildFill="True" Margin="0,-16,0,0">
-                    <TextBlock Text="nuget>" Foreground="White" FontFamily="Consolas"/>
-                    <TextBox x:Name="txtIn" BorderThickness="0" KeyDown="txtIn_KeyDown" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" TextWrapping="Wrap" CaretBrush="White" FontFamily="Consolas"/>
+                    <TextBlock Text="nuget>" Foreground="White" FontFamily="Consolas" FontSize="11" Margin="0,4"/>
+                    <TextBox x:Name="txtIn" BorderThickness="0" KeyDown="txtIn_KeyDown" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" TextWrapping="Wrap" CaretBrush="White" FontFamily="Consolas" FontSize="11" Margin="0,4" PreviewKeyDown="txtIn_PreviewKeyDown"/>
                 </DockPanel>
             </StackPanel>
         </ScrollViewer>

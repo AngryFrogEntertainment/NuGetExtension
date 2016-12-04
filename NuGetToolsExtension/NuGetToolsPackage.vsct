@@ -124,17 +124,17 @@
         </Strings>
       </Button>
 
-      <Button guid="guidNuGetToolsPackageCmdSet1" id="cmdidPackage" priority="0x0100" type="Button">
+      <Button guid="guidNuGetToolsPackageCmdSet1" id="cmdidPackage" priority="0x0101" type="Button">
         <Parent guid="guidNuGetToolsPackageCmdSet1" id="MyMenuGroup" />
         <Icon guid="guidImages" id="pack" />
         <Strings>
-          <ButtonText>Create NuGet Package</ButtonText>
+          <ButtonText>Create Package</ButtonText>
         </Strings>
       </Button>
 
-      <!--<Button guid="guidNuGetToolsPackageCmdSet1" id="cmdidPush" priority="0x0100" type="Button">
+      <!--<Button guid="guidNuGetToolsPackageCmdSet1" id="cmdidPush" priority="0x0102" type="Button">
         <Parent guid="guidNuGetToolsPackageCmdSet1" id="MyMenuGroup" />
-        <Icon guid="guidImages2" id="bmpPic1" />
+        <Icon guid="guidImages" id="push" />
         <Strings>
           <ButtonText>Push Package</ButtonText>
         </Strings>

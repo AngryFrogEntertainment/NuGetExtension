@@ -79,9 +79,8 @@ namespace AngryFrog.NuGetToolsExtension
 	    public async Task<int> CreateNuspec(string projectPath, bool force = false)
         {
             output.WriteLine($"Creating nuspec file for '{Path.GetFileName(projectPath)}'...");
-            processInfo.WorkingDirectory = Path.GetDirectoryName(projectPath);
             var arguments = force ? "-f" : string.Empty;
-            int exitCode = await RunNuget("spec", arguments);
+            int exitCode = await RunNuget("spec", arguments, Path.GetDirectoryName(projectPath));
 
             return exitCode;
         }
@@ -110,8 +109,12 @@ namespace AngryFrog.NuGetToolsExtension
             return await RunNuget("locals all", "-clear");
         }
 
-        public async Task<int> RunNuget(string nugetCommand, string nugetArguments)
+        public async Task<int> RunNuget(string nugetCommand, string nugetArguments, string workingDirectory = "")
         {
+            if (!string.IsNullOrEmpty(workingDirectory))
+            {
+                processInfo.WorkingDirectory = workingDirectory;
+            }
             processInfo.Arguments = $"{nugetCommand} {nugetArguments} -Verbosity {config.VerbosityLevel}";
 
             return await new TaskFactory().StartNew(() =>
@@ -126,7 +129,6 @@ namespace AngryFrog.NuGetToolsExtension
 					process.BeginErrorReadLine();
 					process.WaitForExit();
 					output.WriteLine($"ExitCode: '{process.ExitCode}'");
-
 				}
 				catch (Exception e)
 				{
