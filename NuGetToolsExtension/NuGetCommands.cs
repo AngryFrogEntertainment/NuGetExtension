@@ -40,26 +40,35 @@ namespace AngryFrog.NuGetToolsExtension
 
 			output.WriteLine($"Creating package for '{Path.GetFileName(projectPath)}' at '{outputPath}'...");
 			var arguments = string.Format($@"""{projectPath}"" {build} {includeReferences} {symbols} {versionOverwrite} -outputDirectory ""{outputPath}""");
-			var exitCode = await RunNuget("pack", arguments);
 
-			var packageId = determinePackageId(assemblyName, projectPath);
-            var nugetFiles = Directory.GetFiles(outputPath, "*.nupkg").Where(x => x.Contains($"{packageId}.{version}")).ToList();
+            var nugetFilesBefore = Directory.GetFiles(outputPath, "*.nupkg");
+            var exitCode = await RunNuget("pack", arguments);
+            var nugetFilesAfter = Directory.GetFiles(outputPath, "*.nupkg");
 
-			if (nugetFiles.Count == 2 && config.AreSymbolsIncluded)
-			{
-                // If symbols are included, delete the other Package
-				var nugetFile = nugetFiles.FirstOrDefault(x => !x.Contains("symbols"));
-				if (!string.IsNullOrEmpty(nugetFile))
-				{
-					File.Delete(nugetFile);
-					nugetFiles.Remove(nugetFile);
-				}
-			}
+            var newNugetFiles = nugetFilesAfter.Except(nugetFilesBefore).ToList();
 
-			if (nugetFiles.Count == 1)
-			{
-				LastCreatedFile = new FileInfo(nugetFiles[0]);
-			}
+            if (exitCode == 0)
+            {
+                if (newNugetFiles.Count == 2 && config.AreSymbolsIncluded)
+                {
+                    // If symbols are included, delete the other Package
+                    var nugetFile = newNugetFiles.FirstOrDefault(x => !x.Contains("symbols"));
+                    if (!string.IsNullOrEmpty(nugetFile))
+                    {
+                        File.Delete(nugetFile);
+                        newNugetFiles.Remove(nugetFile);
+                    }
+                }
+
+                if (newNugetFiles.Count == 1)
+                {
+                    LastCreatedFile = new FileInfo(newNugetFiles[0]);
+                }
+                else
+                {
+                    output.WriteWarningLine("Created NuGet package could not be identified. Package has to be pushed manually");
+                } 
+            }
 
 			return exitCode;
 		}
@@ -148,34 +157,6 @@ namespace AngryFrog.NuGetToolsExtension
         private void writeProcessErrorData(object sender, DataReceivedEventArgs args)
         {
             output.WriteErrorLine(args.Data);
-        }
-
-        private string determinePackageId(string assemblyName, string projectPath)
-        {
-            var result = assemblyName;
-            var projectDir = Path.GetDirectoryName(projectPath);
-            var nuspecs = Directory.GetFiles(projectDir, "*.nuspec");
-
-            // There is exactly 1 nuspec file.
-            if (nuspecs.Length == 1)
-            {
-                var doc = new XmlDocument();
-                doc.Load(nuspecs[0]);
-                var idTag = doc.GetElementsByTagName("id");
-
-                // There is exactly one id tag.
-                if (idTag.Count == 1)
-                {
-                    var id = idTag[0].InnerText;
-                    
-                    if (!id.Contains("$"))
-                    {
-                        result = id;
-                    }
-                }
-            }
-
-            return result;
         }
     }
 }
